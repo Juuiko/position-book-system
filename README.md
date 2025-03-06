@@ -65,7 +65,7 @@ The database can be populated with test data using the menu in the bottom left n
 
 1. **Frontend** :
 
-    Built with React, Vite, Shadcn, and Tailwind
+    Built with React, Vite, Shadcn, Tailwind
 
 1. **Backend** :
 
