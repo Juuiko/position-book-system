@@ -1,6 +1,5 @@
 package dev.alexmahon.position_book_system.database;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class MemoryDatabase {
         String eventKey = generateKey(event.getAccount(), event.getSecurity());
 
         // compute if key is in map
-        positionsDb.compute(eventKey, (k, existingValue) -> {
+        positionsDb.compute(eventKey, (_, _) -> {
             if (positionsDb.isEmpty() || !positionsDb.containsKey(eventKey)) {
                 // create new entry
                 if (event.getAction() == TradeEventAction.CANCEL) {

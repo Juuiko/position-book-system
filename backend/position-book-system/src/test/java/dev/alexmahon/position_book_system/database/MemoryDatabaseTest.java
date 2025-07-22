@@ -9,8 +9,6 @@ import dev.alexmahon.position_book_system.enums.TradeEventAction;
 import dev.alexmahon.position_book_system.models.Positions;
 import dev.alexmahon.position_book_system.models.TradeEvent;
 
-import java.util.Arrays;
-
 @SpringBootTest
 class YourTest {
     @Autowired
