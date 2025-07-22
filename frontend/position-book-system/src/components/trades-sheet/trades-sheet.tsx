@@ -10,10 +10,10 @@ import {
 import { useSheet } from "@/context/sheet-trigger";
 import { TradeEvent } from "@/api/models/positions.model";
 
-function Events(trades: TradeEvent[]) {
+function Events({ trades }: { trades: TradeEvent[] }) {
   return (
     <div className="overflow-x-hidden">
-      {Object.values(trades).map((event, index) => (
+      {trades?.map((event, index) => (
         <div key={index}>
           <Card className="m-4">
             <CardContent>
@@ -43,11 +43,11 @@ export function TradesSheet() {
       <SheetContent className="overflow-scroll">
         <SheetHeader>
           <SheetTitle>
-            Security: {data.Security} & Account: {data.Account}
+            Security: {data?.Security} & Account: {data?.Account}
           </SheetTitle>
           <SheetDescription>Event Log</SheetDescription>
         </SheetHeader>
-        <Events {...data.Events} />
+        <Events trades={data?.Events ?? []} />
       </SheetContent>
     </Sheet>
   );

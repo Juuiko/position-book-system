@@ -1,8 +1,6 @@
 import { Position } from "@/api/models/positions.model";
-import { Button } from "@/components/ui/button";
-import { useSheet } from "@/context/sheet-trigger";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChartCandlestick } from "lucide-react";
+import { FullLogButton } from "./full-log-button";
 
 
 
@@ -21,17 +19,7 @@ export const columns: ColumnDef<Position>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const { setOpen } = useSheet();
-
-      const tradeData  = row.original;
-
-      return (
-          <Button onClick={() => setOpen(true, tradeData)} variant="outline">
-            View <ChartCandlestick className="h-4 w-4" />
-          </Button>
-      );
-    },
+    cell: ({ row }) => <FullLogButton tradeData={row.original} />,
     header: "Full Log",
   },
 ];

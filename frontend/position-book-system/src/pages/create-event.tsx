@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useEventForm } from "@/context/create-event-form-provider";
+import { useEventForm } from "@/context/event-form";
 import CreateEventCard from "@/features/create-event-card/create-event-card";
 import { useEffect, useRef } from "react";
 
@@ -16,7 +16,7 @@ export default function CreateEvent() {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   return (
     <div className="p-4 w-full">

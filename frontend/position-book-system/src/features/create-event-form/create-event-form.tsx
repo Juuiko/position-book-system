@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect } from "react";
-import { useEventForm } from "@/context/create-event-form-provider";
+import { useEventForm } from "@/context/event-form";
 import {
   Select,
   SelectContent,
@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import React from "react";
 
 export type EventFormData = z.infer<typeof formSchema>;
 
@@ -48,6 +49,9 @@ const buySellSchema = z.object({
 const cancelSchema = z.object({
   ...commonFields,
   Action: z.literal("CANCEL"),
+  Security: z.string().optional(),
+  Quantity: z.coerce.number().optional(),
+  Account: z.string().optional(),
 });
 
 const formSchema = z.discriminatedUnion("Action", [
@@ -58,27 +62,6 @@ const formSchema = z.discriminatedUnion("Action", [
 
 export default function CreateEventForm() {
   const { formIds, addForm, registerForm, events } = useEventForm();
-  const formMethods = useForm(); // Create the form instance here
-
-  // when creating a new form, get the ref to the context
-  const latestId = formIds[formIds.length - 1];
-  useEffect(() => {
-    if (latestId !== undefined) {
-      registerForm(latestId, extendedFormMethods);
-    }
-  }, [latestId, addForm, formMethods, registerForm]);
-
-  // Extend formMethods to include custom functions
-  const extendedFormMethods = {
-    ...formMethods, // Spread the default form methods
-    triggerValidation: () => {
-      return form.trigger();
-    },
-    getValues: () => {
-      return form.getValues();
-    },
-  };
-
   const form = useForm<EventFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -89,6 +72,22 @@ export default function CreateEventForm() {
       Quantity: 0,
     },
   });
+
+  // Extend form to include custom functions
+  const extendedFormMethods = React.useMemo(() => ({
+    ...form, // Spread the default form methods
+    triggerValidation: () => {
+      return form.trigger();
+    },
+  }), [form]);
+
+  // when creating a new form, get the ref to the context
+  const latestId = formIds[formIds.length - 1];
+  useEffect(() => {
+    if (latestId !== undefined) {
+      registerForm(latestId, extendedFormMethods);
+    }
+  }, [latestId, addForm, registerForm, extendedFormMethods]);
 
   const actionType = form.watch("Action"); // Access Action from the form instance
 
@@ -192,8 +191,7 @@ export default function CreateEventForm() {
             control={form.control}
             name="ID"
             render={({ field }) => {
-              const events = useEventForm().events;
-
+              // Use the events from the top-level hook
               return (
                 <FormItem>
                   <FormLabel>Event To Cancel</FormLabel>

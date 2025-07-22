@@ -1,16 +1,24 @@
 import { ENDPOINTS } from "./endpoints";
 
 export const sendEvent = (
-data: {
-  ID: number;
-  Action: string;
-  Account: string;
-  Security: string;
-  Quantity: number;
-}[]) => {
+  data: (
+    | {
+      ID: number;
+      Action: "BUY" | "SELL";
+      Account: string;
+      Security: string;
+      Quantity: number;
+    }
+    | {
+      ID: number;
+      Action: "CANCEL";
+      Account?: string;
+      Security?: string;
+      Quantity?: number;
+    }
+  )[]) => {
   const payload = { Events: data };
   try {
-    console.log(payload);
     const response = fetch(ENDPOINTS.events.create, {
       method: "POST",
       headers: {

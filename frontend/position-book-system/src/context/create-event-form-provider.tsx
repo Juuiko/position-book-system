@@ -1,10 +1,10 @@
 import { sendEvent } from "@/api/post-event";
 import { EventFormData } from "@/features/create-event-form/create-event-form";
-import React, { createContext, useContext, useState, useRef, RefObject } from "react";
+import React, { createContext, useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import CreateEventForm from "@/features/create-event-form/create-event-form";
 import { TradeEvent } from "@/api/models/positions.model";
 import { getEvents } from "@/api/get-event";
+import { UseFormReturn } from "react-hook-form";
 
 interface EventFormContextType {
   formIds: number[];
@@ -13,13 +13,18 @@ interface EventFormContextType {
   submitAllEvents: () => void;
   fetchEvents: () => void;
   events: TradeEvent[];
-  registerForm: (id: number, formMethods: RefObject<typeof CreateEventForm>) => void;
+  registerForm: (id: number, formMethods: FormInstance) => void;
 }
+
+type FormInstance = UseFormReturn<EventFormData> & {
+  triggerValidation: () => Promise<boolean>;
+  getValues: () => EventFormData;
+};
 
 // TODO - Create endpoint to fetch this (out of scope)
 let latestId = 11;
 
-const EventFormContext = createContext<EventFormContextType | undefined>(
+export const EventFormContext = createContext<EventFormContextType | undefined>(
   undefined
 );
 
@@ -28,7 +33,7 @@ export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [formIds, setFormIds] = useState<number[]>([]);
   const [events, setEvents] = useState<TradeEvent[]>([]);
-  const formRefs = useRef<{ [key: number]: RefObject<typeof CreateEventForm> }>({});
+  const formRefs = useRef<{ [key: number]: FormInstance }>({});
 
   const addForm = () => {
     setFormIds((formIds) => [...formIds, latestId + 1]);
@@ -47,7 +52,7 @@ export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const registerForm = (id: number, formMethods: RefObject<typeof CreateEventForm>) => {
+  const registerForm = (id: number, formMethods: FormInstance) => {
     formRefs.current[id] = formMethods;
   };
 
@@ -61,12 +66,12 @@ export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
     for (const id of formIds) {
       const formInstance = formRefs.current[id];
       if (formInstance) {
-        const isValid = await (formInstance as any).triggerValidation();
+        const isValid = await formInstance.triggerValidation();
         if (!isValid) {
           allValid = false;
         } else {
           if (formInstance.getValues().Action === "CANCEL") {
-            let tempInstance = formInstance.getValues();
+            const tempInstance = formInstance.getValues();
             const matchingEvent = events.find(
               (event) => event.ID == tempInstance.ID && event.Action !== "CANCEL"
             );
@@ -123,12 +128,4 @@ export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </EventFormContext.Provider>
   );
-};
-
-export const useEventForm = () => {
-  const context = useContext(EventFormContext);
-  if (!context) {
-    throw new Error("useEventForm must be used within an EventFormProvider");
-  }
-  return context;
 };

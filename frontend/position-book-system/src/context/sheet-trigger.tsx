@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 
 interface SheetContextType {
   open: boolean;
-  data: Position;
+  data: Position | undefined;
   setOpen: (open: boolean, data?: Position) => void;
 }
 
@@ -11,16 +11,16 @@ const SheetContext = createContext<SheetContextType | undefined>(undefined);
 
 export const SheetProvider = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<Position | undefined>(undefined);
 
-  const handleSetOpen = (open: boolean, newData?: any) => {
+  const handleSetOpen = (open: boolean, newData?: Position) => {
     try {
       if (!open) {
         setOpen(false);
-        setData({});
+        setData(undefined);
       } else {
         setOpen(true);
-        setData(newData || {});
+        setData(newData);
       }
     } catch (error) {
       console.log("Fail");
