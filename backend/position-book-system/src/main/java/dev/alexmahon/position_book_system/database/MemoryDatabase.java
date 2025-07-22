@@ -1,5 +1,6 @@
 package dev.alexmahon.position_book_system.database;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,61 +30,66 @@ public class MemoryDatabase {
     public void insertTradeEvent(TradeEvent event) {
         String eventKey = generateKey(event.getAccount(), event.getSecurity());
 
-        // if the DB is empty or the user/sec are not in the DB
-        if(positionsDb.isEmpty() || !positionsDb.containsKey(eventKey)){
-            // create new entry
-            if(event.getAction() == TradeEventAction.CANCEL){
-                System.err.println("ERROR: Cancel event received on empty database.");
-                return;
+        // compute if key is in map
+        positionsDb.compute(eventKey, (k, existingValue) -> {
+            if (positionsDb.isEmpty() || !positionsDb.containsKey(eventKey)) {
+                // create new entry
+                if (event.getAction() == TradeEventAction.CANCEL) {
+                    System.err.println("ERROR: Cancel event received on empty database.");
+                    return null;
+                }
+
+                ArrayList<TradeEvent> eventsArr = new ArrayList<>();
+                eventsArr.add(event);
+                // return array with new data
+                return new Positions(
+                        event.getAccount(),
+                        event.getSecurity(),
+                        event.getQuantity(),
+                        eventsArr
+                );
+            } else {
+                // key is in map, so update the value
+                return updatePositions(positionsDb.get(eventKey), event);
             }
+        });
+    }
 
-            ArrayList<TradeEvent> eventsArr = new ArrayList<>();
-            eventsArr.add(event);
+    private Positions updatePositions(Positions position, TradeEvent newEvent){
+        // append event to event list
+        ArrayList<TradeEvent> updatedEvents = position.getEvents();
+        updatedEvents.add(newEvent);
+        position.setEvents(updatedEvents);
 
-            positionsDb.put(eventKey, new Positions(
-                event.getAccount(),
-                event.getSecurity(),
-                event.getQuantity(),
-                eventsArr
-            ));
-        } else {
-            // add entry to the right exisitng position
-            Positions eventPosition = positionsDb.get(eventKey);
-
-            // append event to event list
-            ArrayList<TradeEvent> updatedPosition = eventPosition.getEvents();
-            updatedPosition.add(event);
-            eventPosition.setEvents(updatedPosition);
-
-            // update total quantity
-            int updatedQuantity = eventPosition.getQuantity();
-
-            switch (event.getAction()) {
-                case BUY:
-                    updatedQuantity += event.getQuantity();
-                    break;
-                case SELL:
-                    updatedQuantity -= event.getQuantity();
-                    break;
-                case CANCEL:
-                    int cancelId = IntStream.range(0, updatedPosition.size())
-                        .filter(i -> updatedPosition.get(i).getId() == event.getId())
+        // update total quantity
+        int updatedQuantity = position.getQuantity();
+        // match action & update quantity based on action
+        switch (newEvent.getAction()) {
+            case BUY:
+                updatedQuantity += newEvent.getQuantity();
+                break;
+            case SELL:
+                updatedQuantity -= newEvent.getQuantity();
+                break;
+            case CANCEL:
+                int cancelId = IntStream.range(0, updatedEvents.size())
+                        .filter(i -> updatedEvents.get(i).getId() == newEvent.getId())
                         .findFirst()
                         .orElse(-1);
-                    TradeEventAction cancelledEventAction = updatedPosition.get(cancelId).getAction();
-                    if(cancelledEventAction == TradeEventAction.BUY){
-                        updatedQuantity -= updatedPosition.get(cancelId).getQuantity();
-                    } else if(cancelledEventAction == TradeEventAction.SELL){
-                        updatedQuantity += updatedPosition.get(cancelId).getQuantity();
-                    }
-                    break;
-                default:
-                    System.err.println("ERROR: Invalid action type " + event.getAction());
-                    break;
-            }
-
-            eventPosition.setQuantity(updatedQuantity);
+                TradeEventAction cancelledEventAction = updatedEvents.get(cancelId).getAction();
+                if (cancelledEventAction == TradeEventAction.BUY) {
+                    updatedQuantity -= updatedEvents.get(cancelId).getQuantity();
+                } else if (cancelledEventAction == TradeEventAction.SELL) {
+                    updatedQuantity += updatedEvents.get(cancelId).getQuantity();
+                }
+                break;
+            default:
+                System.err.println("ERROR: Invalid action type " + newEvent.getAction());
+                break;
         }
+        position.setQuantity(updatedQuantity);
+
+        return position;
     }
 
     public void printDatabase() {
@@ -107,7 +113,7 @@ public class MemoryDatabase {
     }
 
     public Positions[] getDatabase() {
-        return positionsDb.values().toArray(Positions[]::new);    
+        return positionsDb.values().toArray(Positions[]::new);
     }
 
     public Positions[] getDatabaseFiltered(String accountFilter, String securityFilter) {
@@ -116,17 +122,15 @@ public class MemoryDatabase {
             return new Positions[]{positionsDb.get(generateKey(accountFilter, securityFilter))};
 
         } else if (accountFilter != null) {
-            return positionsDb.entrySet()
+            return positionsDb.values()
                 .stream()
-                .filter(entry -> entry.getValue().getAccount().equals(accountFilter))
-                .map(Map.Entry::getValue)
+                .filter(positions -> positions.getAccount().equals(accountFilter))
                 .toArray(Positions[]::new);
 
         } else if (securityFilter != null) {
-            return positionsDb.entrySet()
+            return positionsDb.values()
                 .stream()
-                .filter(entry -> entry.getValue().getAccount().equals(securityFilter))
-                .map(Map.Entry::getValue)
+                .filter(positions -> positions.getAccount().equals(securityFilter))
                 .toArray(Positions[]::new);
 
         } else {
