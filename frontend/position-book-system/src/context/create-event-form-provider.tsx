@@ -122,10 +122,10 @@ export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <EventFormContext.Provider
+    <EventFormContext
       value={{ formIds, addForm, removeForm, submitAllEvents, registerForm, fetchEvents, events }}
     >
       {children}
-    </EventFormContext.Provider>
+    </EventFormContext>
   );
 };

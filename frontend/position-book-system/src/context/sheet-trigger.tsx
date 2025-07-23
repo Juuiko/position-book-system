@@ -29,9 +29,9 @@ export const SheetProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <SheetContext.Provider value={{ open, data, setOpen: handleSetOpen }}>
+    <SheetContext value={{ open, data, setOpen: handleSetOpen }}>
       {children}
-    </SheetContext.Provider>
+    </SheetContext>
   );
 };
 
