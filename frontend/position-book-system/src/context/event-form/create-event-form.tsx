@@ -54,7 +54,7 @@ export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
           if (formInstance.getValues().Action === "CANCEL") {
             const tempInstance = formInstance.getValues();
             const matchingEvent = events.find(
-              (event) => event.ID == tempInstance.ID && event.Action !== "CANCEL"
+              (event) => event.Account == tempInstance.Account && event.Action !== "CANCEL"
             );
             if (matchingEvent) {
               tempInstance.Quantity = matchingEvent.Quantity;
