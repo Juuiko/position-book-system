@@ -1,5 +1,5 @@
 import { sendEvent } from "@/api/post-event";
-import { EventFormData } from "@/features/create-event-form/create-event-form";
+import { EventFormData } from "@/features/create-event-form/event-form-type";
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TradeEvent } from "@/api/models/positions.model";

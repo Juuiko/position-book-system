@@ -1,5 +1,5 @@
 import { TradeEvent } from "@/api/models/positions.model";
-import { EventFormData } from "@/features/create-event-form/create-event-form";
+import { EventFormData } from "@/features/create-event-form/event-form-type";
 import { createContext } from "react";
 import { UseFormReturn } from "react-hook-form";
 

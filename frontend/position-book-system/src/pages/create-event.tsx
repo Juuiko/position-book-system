@@ -16,7 +16,7 @@ export default function CreateEvent() {
 
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+  }, []);
 
   return (
     <div className="p-4 w-full">
