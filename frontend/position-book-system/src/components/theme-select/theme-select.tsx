@@ -5,8 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useTheme } from "@/context/theme-provider"
+import { useTheme } from "@/context/theme/use-theme"
 import { SidebarMenuButton } from "../ui/sidebar"
+import { Theme } from "@/context/theme/theme-context"
 
 export function ModeToggle() {
   const { setTheme } = useTheme()
@@ -21,13 +22,13 @@ export function ModeToggle() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setTheme(Theme.Light)}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setTheme(Theme.Dark)}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => setTheme(Theme.System)}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

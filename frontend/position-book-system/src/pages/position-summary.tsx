@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SheetProvider } from "@/context/sheet-trigger";
+import { SheetProvider } from "@/context/sheet-trigger/sheet-trigger";
 import { columns } from "@/features/positions-table/columns";
 import { PSTable } from "@/features/positions-table/positions-table";
 import { useEffect, useState } from "react";

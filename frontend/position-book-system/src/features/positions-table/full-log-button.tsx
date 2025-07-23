@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Position } from "@/api/models/positions.model";
-import { useSheet } from "@/context/sheet-trigger";
+import { useSheet } from "@/context/sheet-trigger/use-sheet";
 import { ChartCandlestick } from "lucide-react";
 
 interface FullLogButtonProps {

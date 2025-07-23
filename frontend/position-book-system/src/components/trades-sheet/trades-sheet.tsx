@@ -7,7 +7,7 @@ import {
   SheetDescription,
   Sheet,
 } from "../ui/sheet";
-import { useSheet } from "@/context/sheet-trigger";
+import { useSheet } from "@/context/sheet-trigger/use-sheet";
 import { TradeEvent } from "@/api/models/positions.model";
 
 function Events({ trades }: { trades: TradeEvent[] }) {

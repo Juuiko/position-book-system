@@ -1,13 +1,6 @@
 import { Position } from "@/api/models/positions.model";
-import React, { createContext, useContext, useState } from "react";
-
-interface SheetContextType {
-  open: boolean;
-  data: Position | undefined;
-  setOpen: (open: boolean, data?: Position) => void;
-}
-
-const SheetContext = createContext<SheetContextType | undefined>(undefined);
+import React, { useState } from "react";
+import { SheetContext } from "./sheet-trigger-context";
 
 export const SheetProvider = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
@@ -33,12 +26,4 @@ export const SheetProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </SheetContext>
   );
-};
-
-export const useSheet = () => {
-  const context = useContext(SheetContext);
-  if (!context) {
-    throw new Error("useSheet must be used within a SheetProvider");
-  }
-  return context;
 };
