@@ -13,11 +13,7 @@ import dev.alexmahon.position_book_system.models.TradeEvent;
 public class EventsService {
 
     @Autowired
-    MemoryDatabase dbService; 
-
-    public List<TradeEvent> getTradeEvents() {
-        return null;
-    }
+    MemoryDatabase dbService;
 
     public void setTradeEvents(List<TradeEvent> trades) {
         System.out.println("Inserting trade event(s)");

@@ -207,10 +207,9 @@ export default function CreateEventForm() {
                         {events.length > 0 ? (
                           events
                           .filter((event) => event.Action !== "CANCEL")
-                          .sort((a, b) => a.ID - b.ID)
                           .map((event) => (
-                            <SelectItem key={event.ID} value={event.ID.toString()}>
-                              {event.Action} {event.Quantity} units of {event.Security} (ID #{event.ID})
+                            <SelectItem key={event.Account} value={event.Account || "Cancel Event"}>
+                              {event.Action} {event.Quantity} units of {event.Security} (ID #{event.Account})
                             </SelectItem>
                           ))
                         ) : (

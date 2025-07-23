@@ -20,13 +20,13 @@ public class AdminController {
     @DeleteMapping("/delete-database")
     public ResponseEntity<Void> emptyDatabase() {
         service.emptyDatabase();
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/populate-database")
     public ResponseEntity<Void> populateDatabase() {
         service.populateDatabase();
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

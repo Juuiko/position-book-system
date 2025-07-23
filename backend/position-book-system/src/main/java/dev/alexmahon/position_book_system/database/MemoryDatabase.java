@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class MemoryDatabase {
 
     // Thread-safe collections for storing data
     private static final Map<String, Positions> positionsDb = new ConcurrentHashMap<>();
+    private final AtomicInteger eventIdCounter = new AtomicInteger(0);
 
     // Generate position key
     private static String generateKey(String account, String security) {
@@ -38,9 +40,14 @@ public class MemoryDatabase {
                     return null;
                 }
 
+                // assign id to event
+                int eventId = eventIdCounter.incrementAndGet();
+                event.setId(eventId); // Assuming TradeEvent has an ID field
+
                 ArrayList<TradeEvent> eventsArr = new ArrayList<>();
                 eventsArr.add(event);
-                // return array with new data
+
+                // return array within new position
                 return new Positions(
                         event.getAccount(),
                         event.getSecurity(),
@@ -49,6 +56,8 @@ public class MemoryDatabase {
                 );
             } else {
                 // key is in map, so update the value
+                int eventId = eventIdCounter.incrementAndGet();
+                event.setId(eventId); // Assuming TradeEvent has an ID field
                 return updatePositions(positionsDb.get(eventKey), event);
             }
         });
