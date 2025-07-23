@@ -26,11 +26,11 @@ public class TradeEvent {
 
     protected TradeEvent() {}
 
-    public TradeEvent(int id, TradeEventAction action, String account, String secutiy, int quantity) {
+    public TradeEvent(int id, TradeEventAction action, String account, String security, int quantity) {
         this.id = id;
         this.action = action;
         this.account = account;
-        this.security = secutiy;
+        this.security = security;
         this.quantity = quantity;
     }
 
@@ -43,4 +43,6 @@ public class TradeEvent {
     public String getSecurity() { return this.security; }
 
     public int getQuantity() { return this.quantity; }
+
+    public void setId(int eventId) { this.id = eventId; }
 }

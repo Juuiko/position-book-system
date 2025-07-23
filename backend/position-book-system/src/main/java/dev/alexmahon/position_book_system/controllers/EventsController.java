@@ -28,19 +28,19 @@ public class EventsController {
     @PostMapping("/new-trades")
     public ResponseEntity<Void> postTradeEvents(@RequestBody TradeEventRequest events) {
         service.setTradeEvents(events.getEvents());
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
     public ResponseEntity<TradeEvent[]> getEventAll() {
-        return new ResponseEntity<TradeEvent[]>(
+        return new ResponseEntity<>(
             service.getEventAll(), HttpStatus.OK
         );
     }
 
     @GetMapping("/events/{id}")
     public ResponseEntity<TradeEvent> getEventById(@PathVariable int id) {
-        return new ResponseEntity<TradeEvent>(
+        return new ResponseEntity<>(
             service.getEventById(id), HttpStatus.OK
         );
     }
@@ -53,19 +53,19 @@ public class EventsController {
         // if requesting filtered
         if (accountId != null || secId != null) {
             PositionsResponse finalBody = new PositionsResponse(service.getPositions(accountId,secId));
-            return new ResponseEntity<PositionsResponse>(finalBody, HttpStatus.OK);
+            return new ResponseEntity<>(finalBody, HttpStatus.OK);
         }
         
         // else return all
         PositionsResponse finalBody = new PositionsResponse(service.getPositions());
-        return new ResponseEntity<PositionsResponse>(finalBody, HttpStatus.OK);
+        return new ResponseEntity<>(finalBody, HttpStatus.OK);
     }
 
-    public class PositionsResponse {
+    public static class PositionsResponse {
 
         @JsonProperty("Positions")
-        private Positions[] Positions;
-    
+        private final Positions[] Positions;
+
         // Constructor
         public PositionsResponse(Positions[] positions) {
             this.Positions = positions;

@@ -1,34 +1,22 @@
+import { toast } from "sonner";
 import { ENDPOINTS } from "./endpoints";
+import { TradeEvent } from "./models/positions.model";
 
-export const sendEvent = (
-  data: (
-    | {
-      ID: number;
-      Action: "BUY" | "SELL";
-      Account: string;
-      Security: string;
-      Quantity: number;
-    }
-    | {
-      ID: number;
-      Action: "CANCEL";
-      Account?: string;
-      Security?: string;
-      Quantity?: number;
-    }
-  )[]) => {
+export const sendEvent = (data: TradeEvent[]) => {
   const payload = { Events: data };
-  try {
-    const response = fetch(ENDPOINTS.events.create, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(payload),
-    });
-    console.log(response);
-  } catch (error) {
-    console.error("Error submitting form:", error);
+  fetch(ENDPOINTS.events.create, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify(payload),
   }
+  ).then((res) => {
+    if (res.status !== 200) {
+      toast.error("Error submitting form:" + res.statusText);
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
+    toast.success("Event successfully sent");
+  });
 };
