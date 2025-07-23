@@ -1,32 +1,13 @@
 import { sendEvent } from "@/api/post-event";
 import { EventFormData } from "@/features/create-event-form/create-event-form";
-import React, { createContext, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import { TradeEvent } from "@/api/models/positions.model";
 import { getEvents } from "@/api/get-event";
-import { UseFormReturn } from "react-hook-form";
-
-interface EventFormContextType {
-  formIds: number[];
-  addForm: () => void;
-  removeForm: () => void;
-  submitAllEvents: () => void;
-  fetchEvents: () => void;
-  events: TradeEvent[];
-  registerForm: (id: number, formMethods: FormInstance) => void;
-}
-
-type FormInstance = UseFormReturn<EventFormData> & {
-  triggerValidation: () => Promise<boolean>;
-  getValues: () => EventFormData;
-};
+import { EventFormContext, FormInstance } from "./event-form-context";
 
 // TODO - Create endpoint to fetch this (out of scope)
 let latestId = 11;
-
-export const EventFormContext = createContext<EventFormContextType | undefined>(
-  undefined
-);
 
 export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

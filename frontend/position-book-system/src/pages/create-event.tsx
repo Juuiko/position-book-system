@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useEventForm } from "@/context/event-form";
+import { useEventForm } from "@/context/event-form/use-event-form";
 import CreateEventCard from "@/features/create-event-card/create-event-card";
 import { useEffect, useRef } from "react";
 

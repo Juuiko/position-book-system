@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect } from "react";
-import { useEventForm } from "@/context/event-form";
+import { useEventForm } from "@/context/event-form/use-event-form";
 import {
   Select,
   SelectContent,
