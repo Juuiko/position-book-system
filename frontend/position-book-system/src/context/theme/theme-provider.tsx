@@ -27,7 +27,6 @@ export const ThemeProvider = ({
 
   // save theme to localStorage whenever it changes
   useEffect(() => {
-    console.log("Setting theme:", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
