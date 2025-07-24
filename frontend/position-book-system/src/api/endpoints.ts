@@ -4,7 +4,6 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL + API_VERSION || "";
 
 export const ENDPOINTS = {
   events: {
-    getAll: `${BASE_URL}/events`,
     getAllPositions: `${BASE_URL}/events/positions`,
     getAllEvents: `${BASE_URL}/events/all`,
     getById: (id: string) => `${BASE_URL}/events/${id}`,

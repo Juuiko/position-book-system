@@ -3,7 +3,7 @@
 ### Get All Events
 Retrieves a list of all trade events in the system.
 
-`GET /events`
+`GET /events/all`
 
 Response
 
@@ -75,36 +75,6 @@ Response
         "Quantity": 50,
       }
     ],
-  }
-  // ...
-]
-```
-
-### Get All Events (Alternative Endpoint)
-
-Alternative endpoint to retrieve all trade events with full details.
-
-`GET /events/all`
-
-Response
-
-`Status: 200 OK`
-
-```json
-[
-  {
-    "ID": "1",
-    "Action": "BUY",
-    "Account": "ACC001",
-    "Security": "AAPL",
-    "Quantity": 100,
-  },
-  {
-    "ID": "2",
-    "Action": "SELL",
-    "Account": "ACC002",
-    "Security": "GOOGL",
-    "Quantity": 50,
   }
   // ...
 ]
