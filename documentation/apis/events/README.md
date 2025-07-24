@@ -199,9 +199,14 @@ Request Body Example
   "Quantity": 150,
   "Action": "BUY"
 }
+```
+
 Response
-Status: 200 OK
-json{
+
+`Status: 200 OK`
+
+```json
+{
   "ID": "TRD001",
   "Action": "BUY",
   "Account": "ACC001",
