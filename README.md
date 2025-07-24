@@ -81,3 +81,21 @@ If you have any questions/issue, feel free to reach out to me!
 Many thanks,
 
 Alex
+
+## Roadmap!
+| Priority | Done? | Description                                                                              |
+| -------- | ----- | ---------------------------------------------------------------------------------------- |
+| 1        |  [x]  | Fix concurrency condition slippage in DB                                                 |
+| 2        |  [x]  | Update code to React v19 updates                                                         |
+| 3        |  [x]  | Simplify codebase, breaking down complex components                                      |
+| 4        |  [x]  | Write up more in-depth documention, updating key parts                                   |
+| 5        |  [x]  | Fix all linting warnings                                                                 |
+| 6        |  [ ]  | Implement more robust logging for every call to the Spring server                        |
+| 7        |  [ ]  | Implement SDLC hooks to regulate dev work (Husky, Jenkins, Sonarqube, etc)               |
+| 8        |  [ ]  | Add more robustness to certain endpoints (sanitisation & error handling, + confirmation) |
+| 9        |  [ ]  | Add auth to both frontend & backend (would've been first step of the project in prod)    |
+| 10       |  [ ]  | Implement user states                                                                    |
+| 11       |  [ ]  | Containerise to Docker & deploy (must come after auth even in a side project)            |
+| 12       |  [ ]  | Update swagger annotaions to newest version                                              |
+| 13       |  [ ]  | Expand test coverage                                                                     |
+| 14       |  [ ]  | Final write-up for v1                                                                    |
