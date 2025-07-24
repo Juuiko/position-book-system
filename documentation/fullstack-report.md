@@ -16,7 +16,7 @@ The REST API design philosophy emerged from recognising that backend services mu
 
 ## Frontend Experience and User-Centric Design
 
-The React-based frontend represents a modern approach to financial interface design that I've developed through understanding how traders interact with position data in real-world environments. The tabular visualization system balances information density with accessibility; a design challenge that required iterative refinement to achieve optimal user experience.
+The React-based frontend represents a modern approach to financial interface design that I've developed through understanding how traders interact with position data in real-world environments. The tabular visualisation system balances information density with accessibility. A design challenge that required iterative refinement to achieve optimal user experience.
 
 Implementing the automatic UI refresh capabilities taught me about the complexity of maintaining data consistency between frontend state and backend systems in real-time environments and React's state management handling. This synchronisation challenge highlighted how modern web applications must go beyond traditional request-response patterns to provide the immediate feedback that professional trading environments demand.
 
@@ -26,7 +26,7 @@ The drill-down functionality for viewing underlying events demonstrates an appli
 
 The integration of Spring Boot with React through RESTful APIs reveals how thoughtful technology selection creates multiplicative rather than additive benefits. The backend's JSON communication format aligns naturally with JavaScript's object model, while Spring Boot's auto-configuration capabilities complement React's component-based development patterns.
 
-My decision to combine Vite, Shadcn, and Tailwind on the frontend reflects understanding that development velocity and long-term maintainability often require different optimization strategies. Vite's build performance enables rapid iteration during development, while Shadcn's copy-paste component philosophy supports long-term customization requirements that often emerge in enterprise environments.
+My decision to combine Vite, Shadcn, and Tailwind on the frontend reflects understanding that development velocity and long-term maintainability often require different optimisation strategies. Vite's build performance enables rapid iteration during development, while Shadcn's copy-paste component philosophy supports long-term customisation requirements that often emerge in enterprise environments.
 
 ## Integration Challenges and Solutions
 
@@ -47,6 +47,6 @@ The system's ability to handle multi-security events and provide immediate posit
 
 ## Conclusion and Future Considerations
 
-Completing this full-stack Position Book system has demonstrated my understanding that sophisticated software architecture emerges from balancing technical capabilities with business requirements and operational constraints. The project highlights my thoughtfulness when comes technology selection and integration design that can create systems which are both immediately functional and positioned for future enhancement.
+Completing this full-stack Position Book system has demonstrated my understanding that sophisticated software architecture emerges from balancing technical capabilities with business requirements and operational constraints. The project highlights my thoughtfulness when it comes to technology selection and integration design that can create systems that are both immediately functional and positioned for future enhancement.
 
 The combination of proven enterprise technologies with modern development practices creates a foundation suitable for professional trading environments while maintaining the development velocity necessary for iterative improvement based on user feedback and evolving business requirements. This balance between stability and adaptability represents the kind of architectural thinking that is very valuable as software systems scale beyond initial development phases.
