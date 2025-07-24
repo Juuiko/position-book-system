@@ -1,4 +1,4 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Control } from "react-hook-form";
 import { EventFormData } from "../event-form-type";
@@ -6,7 +6,7 @@ import { TradeEvent } from "@/api/models/positions.model";
 
 interface CancelEventFieldProps {
   control: Control<EventFormData>;
-  events: TradeEvent[]; // Replace with proper event type
+  events: TradeEvent[];
 }
 
 export function CancelEventField({ control, events }: CancelEventFieldProps) {
@@ -16,11 +16,12 @@ export function CancelEventField({ control, events }: CancelEventFieldProps) {
       name="ID"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Event To Cancel</FormLabel>
+          <span>Event To Cancel</span>
           <FormControl>
             <Select
               onValueChange={field.onChange}
               defaultValue={field.value?.toString()}
+              name={field.name}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select an Event" />

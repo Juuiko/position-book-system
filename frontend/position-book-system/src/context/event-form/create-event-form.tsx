@@ -1,112 +1,100 @@
-import { sendEvent } from "@/api/post-event";
 import { EventFormData } from "@/features/create-event-form/event-form-type";
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router";
-import { TradeEvent } from "@/api/models/positions.model";
-import { getEvents } from "@/api/get-event";
-import { EventFormContext, FormInstance } from "./event-form-context";
-
-// TODO - Create endpoint to fetch this (out of scope)
-let latestId = 11;
+import React, { useState, useCallback } from "react";
+import { EventFormContext, EventFormContextType, ExtendedFormMethods } from "./event-form-context";
 
 export const EventFormProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [formIds, setFormIds] = useState<number[]>([]);
-  const [events, setEvents] = useState<TradeEvent[]>([]);
-  const formRefs = useRef<{ [key: number]: FormInstance }>({});
+  const [formIds, setFormIds] = useState<string[]>([]);
+  const [formInstances, setFormInstances] = useState<Record<string, ExtendedFormMethods>>({});
 
-  const addForm = () => {
-    setFormIds((formIds) => [...formIds, latestId + 1]);
-    latestId++;
-  };
+  const registerForm = useCallback((id: string, formMethods: ExtendedFormMethods) => {
+    setFormInstances(prev => ({
+      ...prev,
+      [id]: formMethods
+    }));
+  }, []);
 
-  const removeForm = () => {
-    setFormIds((formIds) => {
-      if (formIds.length <= 1) return formIds;
+  const addForm = useCallback((id: string) => {
+    setFormIds(prev => [...prev, id]);
+  }, []);
 
-      const newFormIds = [...formIds];
-      delete formRefs.current[newFormIds.pop()!]; // pop and delete last elm
-      latestId = newFormIds[newFormIds.length - 1];
-
-      return newFormIds; // Return a new array to trigger re-render
+  const removeForm = useCallback((id: string) => {
+    setFormIds(prev => prev.filter(formId => formId !== id));
+    setFormInstances(prev => {
+      const newInstances = { ...prev };
+      delete newInstances[id];
+      return newInstances;
     });
-  };
+  }, []);
 
-  const registerForm = (id: number, formMethods: FormInstance) => {
-    formRefs.current[id] = formMethods;
-  };
+  const getFormData = useCallback((id: string): EventFormData | null => {
+    const formInstance = formInstances[id];
+    if (!formInstance) {
+      console.warn(`Form with id "${id}" not found`);
+      return null;
+    }
+    return formInstance.getValues();
+  }, [formInstances]);
 
-  const navigate = useNavigate(); // Initialize navigation function
+  const getFormInstance = useCallback((id: string): ExtendedFormMethods | null => {
+    return formInstances[id] || null;
+  }, [formInstances]);
 
-  // validate & submit all event forms
-  const submitAllEvents = async () => {
-    let allValid = true;
-    const formData: EventFormData[] = [];
+  const testAllForms = async (): Promise<boolean> => {
+    let testsPassed = true;
 
-    for (const id of formIds) {
-      const formInstance = formRefs.current[id];
-      if (formInstance) {
-        const isValid = await formInstance.triggerValidation();
-        if (!isValid) {
-          allValid = false;
-        } else {
-          if (formInstance.getValues().Action === "CANCEL") {
-            const tempInstance = formInstance.getValues();
-            const matchingEvent = events.find(
-              (event) => event.Account == tempInstance.Account && event.Action !== "CANCEL"
-            );
-            if (matchingEvent) {
-              tempInstance.Quantity = matchingEvent.Quantity;
-              tempInstance.Security = matchingEvent.Security;
-              tempInstance.Account = matchingEvent.Account;
-              
-            } else {
-              console.error("No matching event found");
-            }
-            formData.push(tempInstance);
-          } else {
-            formData.push({ ...formInstance.getValues(), ID: id });
-          }
-        }
-      } else {
-        alert("Please add & complete at least 1 form before sumitting");
-        return;
+    console.log("Testing all forms:", formIds);
+
+    formIds.every(id => {
+      const formInstance = formInstances[id];
+      if (!formInstance) {
+        console.warn(`Form with id "${id}" not found`);
+        return false;
       }
-    }
-
-    if (!allValid) {
-      alert("Some forms have errors. Please fix them before submitting.");
-      return;
-    }
-
-    try {
-      sendEvent(formData);
-      alert("All forms submitted successfully!");
-      navigate("/dashboard/positions-summary");
-
-      await new Promise((resolve) => {
-        setFormIds([]);
-        formRefs.current = {};
-        resolve(null);
+      formInstance.triggerValidation().then(isValid => {
+        console.log(`Form with id "${id}" validation result:`, isValid);
+        if (!isValid) {
+          console.warn(`Form with id "${id}" is invalid`);
+          testsPassed = false;
+        }
       });
-    } catch (error) {
-      console.error("Error submitting events:", error);
-      alert("Failed to submit events. Please try again.");
-    }
+    })
+
+    return testsPassed;
   };
 
-  const fetchEvents = () => {
-    getEvents().then((events: TradeEvent[]) => {
-      setEvents(events);
+  const removeAllForms = useCallback(() => {
+    setFormIds([]);
+    setFormInstances({});
+  }, []);
+
+  const getAllFormData = useCallback((): Record<string, EventFormData> => {
+    const allData: Record<string, EventFormData> = {};
+    
+    Object.entries(formInstances).forEach(([id, formInstance]) => {
+      allData[id] = formInstance.getValues();
     });
+    
+    return allData;
+  }, [formInstances]);
+
+  const contextValue: EventFormContextType = {
+    formIds,
+    getFormData,
+    getFormInstance,
+    testAllForms,
+    removeAllForms,
+    getAllFormData,
+    removeForm,
+    addForm,
+    registerForm
   };
 
   return (
-    <EventFormContext
-      value={{ formIds, addForm, removeForm, submitAllEvents, registerForm, fetchEvents, events }}
-    >
+    <EventFormContext value={contextValue}>
       {children}
     </EventFormContext>
   );
+
 };

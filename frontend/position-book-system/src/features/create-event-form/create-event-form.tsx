@@ -5,9 +5,16 @@ import { CancelEventField } from "./fields/field-cancel";
 import { AccountField } from "./fields/field-account";
 import { SecurityField } from "./fields/field-security";
 import { QuantityField } from "./fields/field-quantity";
+import { TradeEvent } from "@/api/models/positions.model";
+import { JSX } from "react";
 
-export default function CreateEventForm() {
-  const { form, actionType, events } = useCreateEventForm();
+interface CreateEventFormProps {
+  events: TradeEvent[];
+  formId: string;
+}
+
+export default function CreateEventForm({ events = [], formId }: CreateEventFormProps): JSX.Element {
+  const { form, actionType } = useCreateEventForm(formId);
 
   return (
     <Form {...form}>

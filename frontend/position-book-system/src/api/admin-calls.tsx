@@ -1,9 +1,9 @@
 import { ENDPOINTS } from "./endpoints";
 import { toast } from "sonner";
-import { TradeEvent } from "./models/positions.model";
+import { CreateTradeEvent } from "./models/positions.model";
 
 interface TestData {
-  Events: TradeEvent[];
+  Events: CreateTradeEvent[];
 }
 
 const testData: TestData = {

@@ -6,8 +6,8 @@ import { useEventForm } from "@/context/event-form/use-event-form";
 import { formSchema } from "./event-form-schema";
 import { EventFormData } from "./event-form-type";
 
-export function useCreateEventForm() {
-  const { formIds, addForm, registerForm, events } = useEventForm();
+export function useCreateEventForm(formId: string) {
+  const { registerForm } = useEventForm();
   
   const form = useForm<EventFormData>({
     resolver: zodResolver(formSchema),
@@ -27,19 +27,16 @@ export function useCreateEventForm() {
     },
   }), [form]);
 
-  // Register form with context
-  const latestId = formIds[formIds.length - 1];
+  // Register this form instance with the provided ID
   useEffect(() => {
-    if (latestId !== undefined) {
-      registerForm(latestId, extendedFormMethods);
-    }
-  }, [latestId, addForm, registerForm, extendedFormMethods]);
+    registerForm(formId, extendedFormMethods);
+  }, [formId, registerForm, extendedFormMethods]);
 
   const actionType = form.watch("Action");
   
   return {
     form,
     actionType,
-    events
+    triggerValidation: extendedFormMethods.triggerValidation,
   };
 }

@@ -18,7 +18,6 @@ export default function PositionSummary() {
 
   useEffect(() => {
     getPositions().then((positions: Position[]) => {
-      console.log("Fetched positions:", positions);
       setPositions(positions);
     });
   }, []);
