@@ -3,6 +3,7 @@ package dev.alexmahon.position_book_system.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,10 @@ import dev.alexmahon.position_book_system.services.EventsService;
 public class EventsController {
 
     @Autowired
-    EventsService service; 
+    EventsService service;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @PostMapping("/new-trades")
     public ResponseEntity<Void> postTradeEvents(@RequestBody TradeEventRequest events) {
@@ -33,6 +37,7 @@ public class EventsController {
 
     @GetMapping("/all")
     public ResponseEntity<TradeEvent[]> getEventAll() {
+        kafkaTemplate.send("quickstart-events", "Got all events");
         return new ResponseEntity<>(
             service.getEventAll(), HttpStatus.OK
         );
