@@ -12,13 +12,14 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @Aspect
 @Component
 public class LoggingUtil {
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public LoggingUtil(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
@@ -30,7 +31,7 @@ public class LoggingUtil {
     @Around("restController()")
     public Object logApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
                         .getRequest();
 
         String method = request.getMethod();
@@ -47,14 +48,14 @@ public class LoggingUtil {
             logMessage = String.format("[SUCCESS] %s %s | %s | IP: %s | Args: %s | Duration: %dms",
                     method, uri, controllerMethod, clientIP, args, duration);
 
-            kafkaTemplate.send("api-logs", logMessage);
+            kafkaTemplate.send("quickstart-events", logMessage);
             return result;
         } catch (Exception e) {
             long duration = System.currentTimeMillis() - start;
             logMessage = String.format("[ERROR] %s %s | %s | IP: %s | Args: %s | Duration: %dms | Error: %s",
                     method, uri, controllerMethod, clientIP, args, duration, e.getMessage());
 
-            kafkaTemplate.send("api-logs", logMessage);
+            kafkaTemplate.send("quickstart-events", logMessage);
             throw e;
         }
     }
