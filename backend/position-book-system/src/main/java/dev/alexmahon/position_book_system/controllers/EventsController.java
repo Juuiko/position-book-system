@@ -26,9 +26,6 @@ public class EventsController {
     @Autowired
     EventsService service;
 
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
     @PostMapping("/new-trades")
     public ResponseEntity<Void> postTradeEvents(@RequestBody TradeEventRequest events) {
         service.setTradeEvents(events.getEvents());
@@ -37,7 +34,6 @@ public class EventsController {
 
     @GetMapping("/all")
     public ResponseEntity<TradeEvent[]> getEventAll() {
-        kafkaTemplate.send("quickstart-events", "Got all events");
         return new ResponseEntity<>(
             service.getEventAll(), HttpStatus.OK
         );
