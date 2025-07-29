@@ -5,6 +5,7 @@
 Java: v23.0.2
 Maven: v3.9.1
 Node: v22.14.0
+Kafka: v4.0.0
 
 ### Running the Spring Boot Backend
 
@@ -90,12 +91,13 @@ Alex
 | 3        |  [x]  | Simplify codebase, breaking down complex components                                      |
 | 4        |  [x]  | Write up more in-depth documention, updating key parts                                   |
 | 5        |  [x]  | Fix all linting warnings                                                                 |
-| 6        |  [ ]  | Implement more robust logging for every call to the Spring server                        |
-| 7        |  [ ]  | Implement SDLC hooks to regulate dev work (Husky, Jenkins, Sonarqube, etc)               |
+| 6        |  [x]  | Implement more robust logging for every call to the Spring server                        |
+| 7        |  [x]  | Containerise to Docker                                                                   |
+| 7        |  [ ]  | Implement Kong Gateway                                                                   |
 | 8        |  [ ]  | Add more robustness to certain endpoints (sanitisation & error handling, + confirmation) |
+| 7        |  [ ]  | Implement SDLC hooks to regulate dev work (Husky, Jenkins, Sonarqube, etc)               |
 | 9        |  [ ]  | Add auth to both frontend & backend (would've been first step of the project in prod)    |
 | 10       |  [ ]  | Implement user states                                                                    |
-| 11       |  [ ]  | Containerise to Docker & deploy (must come after auth even in a side project)            |
 | 12       |  [ ]  | Update swagger annotaions to newest version                                              |
 | 13       |  [ ]  | Expand test coverage                                                                     |
 | 14       |  [ ]  | Final write-up for v1                                                                    |

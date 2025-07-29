@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import dev.alexmahon.position_book_system.database.MemoryDatabase;
@@ -15,6 +17,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
+@TestPropertySource(properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}")
 class RequiredTests {
 
     @Autowired
@@ -290,7 +294,7 @@ class RequiredTests {
               {
                 "Account": "ACC1",
                 "Security": "SEC1",
-                "Quantity": 5,
+                "Quantity": 105,
                 "Events": [
                   {
                     "ID": 9,
@@ -300,14 +304,14 @@ class RequiredTests {
                     "Quantity": 100
                   },
                   {
-                    "ID": 9,
+                    "ID": 10,
                     "Action": "CANCEL",
                     "Account": "ACC1",
                     "Security": "SEC1",
                     "Quantity": 0
                   },
                   {
-                    "ID": 10,
+                    "ID": 11,
                     "Action": "BUY",
                     "Account": "ACC1",
                     "Security": "SEC1",

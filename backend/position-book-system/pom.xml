@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>dev.alexmahon</groupId>
 	<artifactId>position-book-system</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>position-book-system</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>

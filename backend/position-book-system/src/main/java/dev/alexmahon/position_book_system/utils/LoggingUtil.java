@@ -48,14 +48,14 @@ public class LoggingUtil {
             logMessage = String.format("[SUCCESS] %s %s | %s | IP: %s | Args: %s | Duration: %dms",
                     method, uri, controllerMethod, clientIP, args, duration);
 
-            kafkaTemplate.send("quickstart-events", logMessage);
+            kafkaTemplate.send("api-logs", logMessage);
             return result;
         } catch (Exception e) {
             long duration = System.currentTimeMillis() - start;
             logMessage = String.format("[ERROR] %s %s | %s | IP: %s | Args: %s | Duration: %dms | Error: %s",
                     method, uri, controllerMethod, clientIP, args, duration, e.getMessage());
 
-            kafkaTemplate.send("quickstart-events", logMessage);
+            kafkaTemplate.send("api-logs", logMessage);
             throw e;
         }
     }
