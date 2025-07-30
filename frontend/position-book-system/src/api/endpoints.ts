@@ -1,6 +1,4 @@
-export const API_VERSION = "/v1";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL + API_VERSION || "";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_API_VERSION || "";
 
 export const ENDPOINTS = {
   events: {
