@@ -7,13 +7,17 @@ services:
     volumes:
       - ./frontend/position-book-system:/app
     environment:
-      - VITE_API_BASE_URL=http://localhost:8080/api
+      - VITE_API_BASE_URL=http://localhost:8000/api
       - VITE_API_VERSION=/v1
     env_file:
       - ./frontend/position-book-system/.env
     stdin_open: true
     tty: true
     command: sh -c "npm install && npm cache clean --force && npm run dev"
+    depends_on:
+      - kong
+    networks:
+      - front-tier
 
   backend:
     build: ./backend/position-book-system/
@@ -99,6 +103,31 @@ services:
     tty: true
     networks:
       - kafka-tier
+
+  kong:
+    image: kong:3.6
+    container_name: kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+    volumes:
+      - ./kong.yml:/kong/declarative/kong.yml
+    ports:
+      - "8000:8000"   # proxy HTTP
+      - "8443:8443"   # proxy SSL
+      - "8001:8001"   # admin API
+      - "8444:8444"   # admin API SSL
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - front-tier
+      - back-tier
 
 configs:
   httpd-config:
