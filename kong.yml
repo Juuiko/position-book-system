@@ -42,3 +42,5 @@ plugins:
         - "*"
       credentials: true
       max_age: 3600
+  - name: ps-rate-limiter
+    route: api-route

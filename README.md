@@ -93,11 +93,11 @@ Alex
 | 5        |  [x]  | Fix all linting warnings                                                                 |
 | 6        |  [x]  | Implement more robust logging for every call to the Spring server                        |
 | 7        |  [x]  | Containerise to Docker                                                                   |
-| 7        |  [ ]  | Implement Kong Gateway                                                                   |
-| 8        |  [ ]  | Add more robustness to certain endpoints (sanitisation & error handling, + confirmation) |
-| 7        |  [ ]  | Implement SDLC hooks to regulate dev work (Husky, Jenkins, Sonarqube, etc)               |
-| 9        |  [ ]  | Add auth to both frontend & backend (would've been first step of the project in prod)    |
-| 10       |  [ ]  | Implement user states                                                                    |
-| 12       |  [ ]  | Update swagger annotaions to newest version                                              |
-| 13       |  [ ]  | Expand test coverage                                                                     |
-| 14       |  [ ]  | Final write-up for v1                                                                    |
+| 8        |  [X]  | Implement Kong Gateway                                                                   |
+| 9        |  [ ]  | Add more robustness to certain endpoints (sanitisation & error handling, + confirmation) |
+| 10       |  [ ]  | Implement SDLC hooks to regulate dev work (Husky, Jenkins, Sonarqube, etc)               |
+| 11       |  [ ]  | Add auth to both frontend & backend (would've been first step of the project in prod)    |
+| 12       |  [ ]  | Implement user states                                                                    |
+| 13       |  [ ]  | Update swagger annotaions to newest version                                              |
+| 14       |  [ ]  | Expand test coverage                                                                     |
+| 15       |  [ ]  | Final write-up for v1                                                                    |

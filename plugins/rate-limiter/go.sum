@@ -1,0 +1,6 @@
+github.com/Kong/go-pdk v0.11.2 h1:aW4kN0FX8ItXD0Qly3JSPNYzAl63ds61tDr9ZW+xQzE=
+github.com/Kong/go-pdk v0.11.2/go.mod h1:KfJ1czLXr5lbdSHSti0ezX76MDTTkqKohJRkxgMT4BU=
+github.com/ugorji/go/codec v1.2.14 h1:yOQvXCBc3Ij46LRkRoh4Yd5qK6LVOgi0bYOXfb7ifjw=
+github.com/ugorji/go/codec v1.2.14/go.mod h1:UNopzCgEMSXjBc6AOMqYvWC1ktqTAfzJZUZgYf6w6lg=
+google.golang.org/protobuf v1.36.2 h1:R8FeyR1/eLmkutZOM5CWghmo5itiG9z0ktFlTVLuTmU=
+google.golang.org/protobuf v1.36.2/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
