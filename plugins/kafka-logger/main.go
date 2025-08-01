@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -36,6 +37,11 @@ type KafkaAsyncProducer struct {
 // NewKafkaAsyncProducer creates a new KafkaAsyncProducer instance.
 func NewKafkaAsyncProducer(brokers []string, topic string) (*KafkaAsyncProducer, error) {
 	config := sarama.NewConfig()
+
+	config.Net.DialTimeout = 5 * time.Second
+	config.Net.ReadTimeout = 5 * time.Second
+	config.Net.WriteTimeout = 5 * time.Second
+
 	config.Producer.RequiredAcks = sarama.WaitForLocal
 	config.Producer.Compression = sarama.CompressionSnappy
 	config.Producer.Flush.Frequency = 500 * time.Millisecond
@@ -200,12 +206,28 @@ var producerManager = NewProducerManager()
 // KafkaLogger plugin with dependency on MessageProducer
 type KafkaLogger struct {
 	producerManager *ProducerManager
+	config          Config
 }
 
 func New() any {
 	return &KafkaLogger{
 		producerManager: producerManager,
 	}
+}
+
+// Configure is called when Kong configures the plugin
+func (p *KafkaLogger) Configure(config Config) error {
+	p.config = config
+
+	// Initialize Kafka producer with the configured values
+	brokers := []string{config.KafkaBootstrapServers}
+	kafkaProducer, err := NewKafkaAsyncProducer(brokers, config.Topic)
+	if err != nil {
+		return fmt.Errorf("failed to create producer: %w", err)
+	}
+
+	p.producerManager.SetProducer(kafkaProducer)
+	return nil
 }
 
 // Access is called for every request during the access phase
@@ -256,6 +278,45 @@ func (p *KafkaLogger) Response(kong *pdk.PDK) {
 }
 
 func main() {
+	// Check for -dump flag to output plugin metadata
+	if len(os.Args) > 1 && os.Args[1] == "-dump" {
+		schema := map[string]interface{}{
+			"Name":     "ps-kafka-logger",
+			"Version":  "0.1.0",
+			"Priority": 10,
+			"Phases":   []string{"access", "response"},
+			"Schema": map[string]interface{}{
+				"config": map[string]interface{}{
+					"type": "record",
+					"fields": []map[string]interface{}{
+						{
+							"kafka_bootstrap_servers": map[string]interface{}{
+								"type":     "string",
+								"required": true,
+								"default":  "kafka:29092",
+							},
+						},
+						{
+							"topic": map[string]interface{}{
+								"type":     "string",
+								"required": true,
+								"default":  "gateway-logs",
+							},
+						},
+					},
+				},
+			},
+		}
+
+		// Marshal to JSON and output
+		jsonBytes, err := json.Marshal(schema)
+		if err != nil {
+			log.Fatalf("Failed to marshal schema: %v", err)
+		}
+		fmt.Println(string(jsonBytes))
+		return
+	}
+
 	brokers := []string{"kafka:29092"}
 	topic := "gateway-logs"
 

@@ -1,30 +1,42 @@
+# 1) Builder stage
 FROM golang:1.24-alpine AS builder
 WORKDIR /build
-# Assuming your Go plugin source is in ./plugins/rate-limiter/
-COPY ./rate-limiter /build/ps-rate-limiter_source
-COPY ./kafka-logger /build/ps-kafka-logger_source
 
+# Bring in your plugin sources
+COPY ./rate-limiter   ./ps-rate-limiter_source
+COPY ./kafka-logger   ./ps-kafka-logger_source
+
+# Prepare the output directory
+RUN mkdir -p /app/ps-rate-limiter /app/ps-kafka-logger
+
+# Build the rate-limiter plugin
 WORKDIR /build/ps-rate-limiter_source
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/ps-rate-limiter .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/ps-rate-limiter/ps-rate-limiter .
 
+# Build the kafka-logger plugin
 WORKDIR /build/ps-kafka-logger_source
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/ps-kafka-logger .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/ps-kafka-logger/ps-kafka-logger .
 
+# 2) Kong image
 FROM kong:3.6
+
 USER root
 
-# Copy plugin binary and startup script
-COPY --from=builder /app/ps-rate-limiter /usr/local/kong/go-plugins/ps-rate-limiter
-COPY --from=builder /app/ps-kafka-logger /usr/local/kong/go-plugins/ps-kafka-logger
+# Create go-plugins dirs
+RUN mkdir -p /usr/local/kong/go-plugins/ps-rate-limiter \
+             /usr/local/kong/go-plugins/ps-kafka-logger
 
-RUN chmod +x /usr/local/kong/go-plugins/ps-rate-limiter
-RUN chmod +x /usr/local/kong/go-plugins/ps-kafka-logger
+# Copy in the two statically-built binaries
+COPY --from=builder /app/ps-rate-limiter/ps-rate-limiter   /usr/local/kong/go-plugins/ps-rate-limiter/ps-rate-limiter
+COPY --from=builder /app/ps-kafka-logger/ps-kafka-logger   /usr/local/kong/go-plugins/ps-kafka-logger/ps-kafka-logger
 
-COPY start-kong-with-plugins.sh /usr/local/bin/start-kong-with-plugins.sh
-RUN chmod +x /usr/local/bin/start-kong-with-plugins.sh
+# Make sure they're executable
+RUN chmod +x /usr/local/kong/go-plugins/ps-rate-limiter/ps-rate-limiter \
+             /usr/local/kong/go-plugins/ps-kafka-logger/ps-kafka-logger
+
+# Change ownership to the kong user
+RUN chown -R kong:kong /usr/local/kong/go-plugins
 
 USER kong
 
-CMD ["/usr/local/bin/start-kong-with-plugins.sh"]
+CMD ["kong", "docker-start"]

@@ -131,18 +131,17 @@ services:
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
-      # Enable external plugins
-      KONG_PLUGINSERVER_NAMES: "ps-rate-limiter, ps-kafka-logger"
-      # Configure the ps-rate-limiter plugin
+      # Plugins configuration
+      KONG_PLUGINS: "bundled, ps-rate-limiter, ps-kafka-logger"
+      KONG_PLUGINSERVER_NAMES: "ps_rate_limiter, ps_kafka_logger"
+      # rate-limiter
       KONG_PLUGINSERVER_PS_RATE_LIMITER_SOCKET: "/usr/local/kong/ps-rate-limiter.socket"
-      KONG_PLUGINSERVER_PS_RATE_LIMITER_EXEC: "/usr/local/kong/go-plugins/ps-rate-limiter"
-      KONG_PLUGINSERVER_PS_RATE_LIMITER_QUERY_CMD: "/usr/local/kong/go-plugins/ps-rate-limiter -dump"
-      # Configure the ps-kafka-logger plugin
+      KONG_PLUGINSERVER_PS_RATE_LIMITER_EXEC:   "/usr/local/kong/go-plugins/ps-rate-limiter/ps-rate-limiter"
+      KONG_PLUGINSERVER_PS_RATE_LIMITER_QUERY_CMD: "/usr/local/kong/go-plugins/ps-rate-limiter/ps-rate-limiter -dump"
+      # kafka-logger
       KONG_PLUGINSERVER_PS_KAFKA_LOGGER_SOCKET: "/usr/local/kong/ps-kafka-logger.socket"
-      KONG_PLUGINSERVER_PS_KAFKA_LOGGER_EXEC: "/usr/local/kong/go-plugins/ps-kafka-logger"
-      KONG_PLUGINSERVER_PS_KAFKA_LOGGER_QUERY_CMD: "/usr/local/kong/go-plugins/ps-kafka-logger -dump"
-      KONG_PLUGINS: "bundled,ps-rate-limiter, ps-kafka-logger"
-      KONG_GO_PLUGINS_PATH: "/usr/local/kong/go-plugins/"
+      KONG_PLUGINSERVER_PS_KAFKA_LOGGER_EXEC:   "/usr/local/kong/go-plugins/ps-kafka-logger/ps-kafka-logger"
+      KONG_PLUGINSERVER_PS_KAFKA_LOGGER_QUERY_CMD: "/usr/local/kong/go-plugins/ps-kafka-logger/ps-kafka-logger -dump"
     volumes:
       - ./kong.yml:/kong/declarative/kong.yml
     ports:

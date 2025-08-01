@@ -43,11 +43,9 @@ plugins:
       credentials: true
       max_age: 3600
   - name: ps-rate-limiter
-    route:
-      name: api-route
+    route: api-route
   - name: ps-kafka-logger
-    route:
-      name: api-route
+    route: api-route
     config:
       kafka_bootstrap_servers: "kafka:29092"
       topic: "gateway-logs"
